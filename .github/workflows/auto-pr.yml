@@ -13,10 +13,12 @@ permissions:
 jobs:
   create-pull-request:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
+      # 🔄 When pushing to branch `z`, create a PR from z → main
       - name: Create PR from z to main
         if: github.ref == 'refs/heads/z'
         uses: repo-sync/pull-request@v2
@@ -24,9 +26,10 @@ jobs:
           source_branch: 'z'
           destination_branch: 'main'
           pr_title: '🔄 Auto PR: Merge z → main'
-          pr_body: 'This PR was auto-generated when z was updated.'
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          pr_body: 'This PR was auto-generated when `z` was updated.'
+          github_token: ${{ secrets.PAT_TOKEN }}
 
+      # 🔄 When pushing to branch `main`, create a PR from main → z
       - name: Create PR from main to z
         if: github.ref == 'refs/heads/main'
         uses: repo-sync/pull-request@v2
@@ -34,5 +37,5 @@ jobs:
           source_branch: 'main'
           destination_branch: 'z'
           pr_title: '🔄 Auto PR: Merge main → z'
-          pr_body: 'This PR was auto-generated when main was updated.'
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          pr_body: 'This PR was auto-generated when `main` was updated.'
+          github_token: ${{ secrets.PAT_TOKEN }}
