@@ -6,6 +6,10 @@ on:
       - main
       - z
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   create-pull-request:
     runs-on: ubuntu-latest
@@ -13,7 +17,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 👉 When pushing to `z`, create PR from z → main
       - name: Create PR from z to main
         if: github.ref == 'refs/heads/z'
         uses: repo-sync/pull-request@v2
@@ -24,7 +27,6 @@ jobs:
           pr_body: 'This PR was auto-generated when z was updated.'
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      # 👉 When pushing to `main`, create PR from main → z
       - name: Create PR from main to z
         if: github.ref == 'refs/heads/main'
         uses: repo-sync/pull-request@v2
